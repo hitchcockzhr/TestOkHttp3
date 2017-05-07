@@ -1,10 +1,14 @@
 package com.example.zhangrui0113.testokhttp3;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 
 import okhttp3.MediaType;
@@ -18,22 +22,26 @@ import okhttp3.Response;
  */
 
 public class HttpUtils {
+    static String TAG = "HttpUtils";
     static  OkHttpClient mOkHttpClient;
     String http = "http://123.56.155.17:8080/";
     String loginUrl = "xys/healthButler/login";
     static  MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+    static String result;
     public static String getResultFromHttpPost(String jsonStr, String url){
         mOkHttpClient = new OkHttpClient();
-        String result= null;
+
         RequestBody body = RequestBody.create(JSON, jsonStr);
         Request request = new Request.Builder().url(url).post(body).build();
-        Call call = mOkHttpClient.newCall(request);
+        Response response = null;
         try {
-            Response response = call.execute();
+            response = mOkHttpClient.newCall(request).execute();
+            Log.i(TAG, response.body().string());
             result = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return result;
 
     }

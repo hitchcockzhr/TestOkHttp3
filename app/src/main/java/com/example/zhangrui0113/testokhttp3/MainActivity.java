@@ -1,5 +1,7 @@
 package com.example.zhangrui0113.testokhttp3;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,16 +31,27 @@ public class MainActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new GsonBuilder().create();
-                User user = new User("pb","123456");
-                String jsonStr = gson.toJson(user);
-                String result = HttpUtils.getResultFromHttpPost(jsonStr, http+loginUrl);
-                Log.i(TAG, result);
+                new Thread(networkTask).start();
+
             }
         });
 
 
+
     }
+
+    Runnable networkTask = new Runnable() {
+
+        @Override
+        public void run() {
+            Gson gson = new GsonBuilder().create();
+            User user = new User("pb","123456");
+            String jsonStr = gson.toJson(user);
+            Log.i(TAG, "jsonStr:"+jsonStr);
+            String result = HttpUtils.getResultFromHttpPost(jsonStr, http+loginUrl);
+            Log.i(TAG, result);
+        }
+    };
 
 }
 class User{
